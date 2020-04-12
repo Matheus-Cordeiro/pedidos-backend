@@ -13,6 +13,7 @@ import com.matheuscordeiro.pedidos.domain.Cidade;
 import com.matheuscordeiro.pedidos.domain.Cliente;
 import com.matheuscordeiro.pedidos.domain.Endereco;
 import com.matheuscordeiro.pedidos.domain.Estado;
+import com.matheuscordeiro.pedidos.domain.ItemPedido;
 import com.matheuscordeiro.pedidos.domain.Pagamento;
 import com.matheuscordeiro.pedidos.domain.PagamentoBoleto;
 import com.matheuscordeiro.pedidos.domain.PagamentoCartao;
@@ -25,6 +26,7 @@ import com.matheuscordeiro.pedidos.repositories.CidadeRepository;
 import com.matheuscordeiro.pedidos.repositories.ClienteRepository;
 import com.matheuscordeiro.pedidos.repositories.EnderecoRepository;
 import com.matheuscordeiro.pedidos.repositories.EstadoRepository;
+import com.matheuscordeiro.pedidos.repositories.ItemPedidoRepository;
 import com.matheuscordeiro.pedidos.repositories.PagamentoRepository;
 import com.matheuscordeiro.pedidos.repositories.PedidoRepository;
 import com.matheuscordeiro.pedidos.repositories.ProdutoRepository;
@@ -48,6 +50,8 @@ public class PedidosApplication implements CommandLineRunner {
 	private PedidoRepository pedidoRepository;
 	@Autowired
 	private PagamentoRepository pagamentoRepository;
+	@Autowired
+	private ItemPedidoRepository itemPedidoRepository;
 	
 	public static void main(String[] args) {
 		SpringApplication.run(PedidosApplication.class, args);
@@ -98,6 +102,17 @@ public class PedidosApplication implements CommandLineRunner {
 		
 		cliente1.getPedidos().addAll(Arrays.asList(pedido1, pedido2));
 		
+		ItemPedido itemPedido1 = new ItemPedido(produto1, pedido1, 0.00, 1, 2000);
+		ItemPedido itemPedido2 = new ItemPedido(produto2, pedido1, 0.00, 2, 80);
+		ItemPedido itemPedido3 = new ItemPedido(produto2, pedido2, 100, 1, 800);
+		
+		pedido1.getItens().addAll(Arrays.asList(itemPedido1, itemPedido2));
+		pedido2.getItens().addAll(Arrays.asList(itemPedido3));
+		
+		produto1.getItens().addAll(Arrays.asList(itemPedido1));
+		produto2.getItens().addAll(Arrays.asList(itemPedido3));
+		produto3.getItens().addAll(Arrays.asList(itemPedido2));
+		
 		categoriaRepository.saveAll(Arrays.asList(categoria1, categoria2));
 		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3));
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
@@ -106,6 +121,7 @@ public class PedidosApplication implements CommandLineRunner {
 		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
 		pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2));
 		pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2));
+		itemPedidoRepository.saveAll(Arrays.asList(itemPedido1, itemPedido2, itemPedido3));
 	}
 
 }
