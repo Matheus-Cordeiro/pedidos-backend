@@ -18,7 +18,7 @@ public class PedidoResource {
 	private PedidoService service;
 	
 	@GetMapping(value = "/{id}")
-	public ResponseEntity<?> findById(@PathVariable (name = "id") Integer id) {
+	public ResponseEntity<Pedido> findById(@PathVariable (name = "id") Integer id) {
 		Pedido pedido = service.findById(id);
 		return ResponseEntity.ok().body(pedido);
 	}
