@@ -1,5 +1,6 @@
 package com.matheuscordeiro.pedidos.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,14 +12,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.matheuscordeiro.pedidos.domain.Cliente;
 import com.matheuscordeiro.pedidos.dto.ClienteDTO;
+import com.matheuscordeiro.pedidos.dto.ClienteNovoDTO;
 import com.matheuscordeiro.pedidos.services.ClienteService;
 
 @RestController
@@ -35,12 +39,6 @@ public class ClienteResource {
 		return ResponseEntity.ok().body(ListaClienteDTO);
 	}
 	
-	@GetMapping(value = "/{id}")
-	public ResponseEntity<Cliente> findById(@PathVariable (name = "id") Integer id) {
-		Cliente cliente = service.findById(id);
-		return ResponseEntity.ok().body(cliente);
-	}
-	
 	@GetMapping(value = "/pagina")
 	public ResponseEntity<Page<ClienteDTO>> findPage(
 			@RequestParam(name = "page", defaultValue = "0") Integer page, 
@@ -50,6 +48,21 @@ public class ClienteResource {
 		Page<Cliente> PaginaCliente = service.findPage(page, linesPerPage, direction ,orderBy);
 		Page<ClienteDTO> ListaClienteDTO = PaginaCliente.map(cliente -> new ClienteDTO(cliente));
 		return ResponseEntity.ok().body(ListaClienteDTO);
+	}
+	
+	@GetMapping(value = "/{id}")
+	public ResponseEntity<Cliente> findById(@PathVariable (name = "id") Integer id) {
+		Cliente cliente = service.findById(id);
+		return ResponseEntity.ok().body(cliente);
+	}
+	
+	@PostMapping(value = "/novo")
+	public ResponseEntity<Void> save(@Valid @RequestBody ClienteNovoDTO clienteNovoDTO){
+		Cliente cliente = service.fromDTO(clienteNovoDTO);
+		cliente = service.save(cliente);
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+				.path("/{id}").buildAndExpand(cliente.getId()).toUri();
+		return ResponseEntity.created(uri).build();
 	}
 	
 	@PutMapping(value = "/atualizar/{id}")
