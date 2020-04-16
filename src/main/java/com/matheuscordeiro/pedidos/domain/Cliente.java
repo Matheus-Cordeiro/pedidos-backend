@@ -7,14 +7,13 @@ import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.Cascade;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matheuscordeiro.pedidos.domain.enums.TipoCliente;
@@ -37,6 +36,8 @@ public class Cliente implements Serializable {
 	private Integer id;
 	
 	private String nome;
+	
+	@Column(unique = true)
 	private String email;
 	private String documento;
 	private Integer tipoCliente;
