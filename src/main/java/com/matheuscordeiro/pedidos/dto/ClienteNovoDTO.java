@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 
 import org.hibernate.validator.constraints.Length;
 
-import com.matheuscordeiro.pedidos.services.validators.ClienteValidator;
+import com.matheuscordeiro.pedidos.services.validators.ClienteInsertValidator;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-@ClienteValidator
+@ClienteInsertValidator
 public class ClienteNovoDTO implements Serializable {
 	static final long serialVersionUID = 1L;
 

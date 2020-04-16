@@ -15,13 +15,13 @@ import com.matheuscordeiro.pedidos.repositories.ClienteRepository;
 import com.matheuscordeiro.pedidos.resources.exceptions.FieldMessage;
 import com.matheuscordeiro.pedidos.services.validators.util.BR;
 
-public class ClienteValidatorImpl implements ConstraintValidator<ClienteValidator, ClienteNovoDTO> {
+public class ClienteInsertValidatorImpl implements ConstraintValidator<ClienteInsertValidator, ClienteNovoDTO> {
 
 	@Autowired
 	private ClienteRepository clienteRepository;
 	
 	@Override
-	public void initialize(ClienteValidator ann) {}
+	public void initialize(ClienteInsertValidator ann) {}
 	
 	@Override
 	public boolean isValid(ClienteNovoDTO clienteNovoDTO, ConstraintValidatorContext context) {
