@@ -75,10 +75,10 @@ public class PedidosApplication implements CommandLineRunner {
 		Produto produto5 = new Produto(null, "Toalha", 50.00);
 		Produto produto6 = new Produto(null, "Colcha", 200.00);
 		Produto produto7 = new Produto(null, "TV true color", 1200.00);
-		Produto produto8 = new Produto(null, "Produto 8", 80.00);
-		Produto produto9 = new Produto(null, "Produto 9", 100.00);
-		Produto produto10 = new Produto(null, "Produto 10", 300.00);
-		Produto produto11 = new Produto(null, "Produto 11", 200.00);
+		Produto produto8 = new Produto(null, "Roçadeira", 800.00);
+		Produto produto9 = new Produto(null, "Abajour", 100.00);
+		Produto produto10 = new Produto(null, "Pendente", 100.00);
+		Produto produto11 = new Produto(null, "Shampoo", 90.00);
 		
 		Estado estado1 = new Estado(null, "Minas Gerais");
 		Estado estado2 = new Estado(null, "São Paulo");

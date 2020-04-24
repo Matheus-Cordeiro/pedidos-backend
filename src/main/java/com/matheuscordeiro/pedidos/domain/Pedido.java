@@ -59,6 +59,14 @@ public class Pedido implements Serializable {
 		this.cliente = cliente;
 	}
 	
+	public double getValorTotal() {
+		double total = 0.0;
+		for(ItemPedido itemPedido : itens) {
+			total = total + itemPedido.getSubTotal();
+		}
+		return total;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
