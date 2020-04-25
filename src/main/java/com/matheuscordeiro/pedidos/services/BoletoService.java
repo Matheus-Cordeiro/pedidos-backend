@@ -1,0 +1,18 @@
+package com.matheuscordeiro.pedidos.services;
+
+import java.util.Calendar;
+import java.util.Date;
+
+import org.springframework.stereotype.Service;
+
+import com.matheuscordeiro.pedidos.domain.PagamentoBoleto;
+
+@Service
+public class BoletoService {
+	public void preencherPagamentoBoleto(PagamentoBoleto tipoPagamento, Date instantePedido){
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(instantePedido);
+		calendar.add(Calendar.DAY_OF_MONTH, 7);
+		tipoPagamento.setDataPagamento(calendar.getTime());
+	}
+}
