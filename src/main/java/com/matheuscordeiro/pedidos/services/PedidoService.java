@@ -15,7 +15,6 @@ import com.matheuscordeiro.pedidos.exceptions.ObjectNotFoundException;
 import com.matheuscordeiro.pedidos.repositories.ItemPedidoRepository;
 import com.matheuscordeiro.pedidos.repositories.PagamentoRepository;
 import com.matheuscordeiro.pedidos.repositories.PedidoRepository;
-import com.matheuscordeiro.pedidos.repositories.ProdutoRepository;
 
 @Service
 public class PedidoService {
@@ -30,10 +29,13 @@ public class PedidoService {
 	private PagamentoRepository pagamentoRepository;
 	
 	@Autowired
-	private ProdutoRepository produtoRepository;
+	private ProdutoService produtoService;
 	
 	@Autowired
 	private ItemPedidoRepository itemPedidoRepository;
+	
+	@Autowired
+	private ClienteService clienteService;
 	
 	public Pedido findById(Integer id){
 		Optional<Pedido> pedido = pedidoRepository.findById(id);
@@ -44,6 +46,7 @@ public class PedidoService {
 	public Pedido save(Pedido pedido) {
 		pedido.setId(null);
 		pedido.setInstante(new Date());
+		pedido.setCliente(clienteService.findById(pedido.getCliente().getId()));
 		pedido.getPagamento().setEstadoPagamento(EstadoPagamento.PENDENTE);
 		pedido.getPagamento().setPedido(pedido);
 		if(pedido.getPagamento() instanceof PagamentoBoleto) {
@@ -56,11 +59,13 @@ public class PedidoService {
 		
 		for(ItemPedido itemPedido : pedido.getItens()) {
 			itemPedido.setDesconto(0.0);
-			Optional<Produto> produto = produtoRepository.findById(itemPedido.getProduto().getId());
-			itemPedido.setPreco(produto.get().getPreco());
+			Produto produto = produtoService.findById(itemPedido.getProduto().getId());
+			itemPedido.setProduto(produto);
+			itemPedido.setPreco(itemPedido.getProduto().getPreco());
 			itemPedido.setPedido(pedido);
 		}
 		itemPedidoRepository.saveAll(pedido.getItens());
+		System.out.println(pedido);
 		return pedido;
 	}
 }
