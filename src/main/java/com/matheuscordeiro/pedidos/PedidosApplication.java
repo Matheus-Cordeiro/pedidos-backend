@@ -6,6 +6,7 @@ import java.util.Arrays;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.matheuscordeiro.pedidos.domain.Categoria;
@@ -32,6 +33,7 @@ import com.matheuscordeiro.pedidos.repositories.PedidoRepository;
 import com.matheuscordeiro.pedidos.repositories.ProdutoRepository;
 
 @SpringBootApplication
+@EnableAutoConfiguration
 public class PedidosApplication implements CommandLineRunner {
 	
 	@Autowired
