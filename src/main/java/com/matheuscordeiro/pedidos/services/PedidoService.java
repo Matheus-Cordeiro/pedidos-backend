@@ -3,7 +3,11 @@ package com.matheuscordeiro.pedidos.services;
 import java.util.Date;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import com.matheuscordeiro.pedidos.domain.ItemPedido;
@@ -37,8 +41,14 @@ public class PedidoService {
 	@Autowired
 	private ClienteService clienteService;
 	
-	private EmailService emailService = new MockEmailService();
+
+	@Autowired
+    private JavaMailSender javaMailSender;
 	
+	private static final Logger LOG = LoggerFactory.getLogger(SmtpEmailService.class);	
+	
+	private SmtpEmailService smtpEmailService = new SmtpEmailService();
+
 	public Pedido findById(Integer id){
 		Optional<Pedido> pedido = pedidoRepository.findById(id);
 		return pedido.orElseThrow(() -> new ObjectNotFoundException(
@@ -67,7 +77,12 @@ public class PedidoService {
 			itemPedido.setPedido(pedido);
 		}
 		itemPedidoRepository.saveAll(pedido.getItens());
-		emailService.sendOrderConfirmationEmail(pedido);
+		
+		LOG.info("Enviando email..");
+		SimpleMailMessage sm = smtpEmailService.prepareEmail(pedido);
+		javaMailSender.send(sm);
+		LOG.info("Email enviado");
+		
 		return pedido;
 	}
 }
