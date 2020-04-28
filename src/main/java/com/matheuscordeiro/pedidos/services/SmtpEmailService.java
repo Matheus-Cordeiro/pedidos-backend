@@ -2,12 +2,20 @@ package com.matheuscordeiro.pedidos.services;
 
 import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.thymeleaf.TemplateEngine;
 
 import com.matheuscordeiro.pedidos.domain.Pedido;
 
 public class SmtpEmailService{
 
+	@Autowired
+	TemplateEngine templateEngine;
+	
+	@Autowired
+	JavaMailSender javaMailSender;
 
 	public SimpleMailMessage  prepareEmail(Pedido pedido) {
 		
@@ -17,6 +25,5 @@ public class SmtpEmailService{
 		sm.setSentDate(new Date(System.currentTimeMillis()));
 		sm.setText(pedido.toString());
 		return sm;
-	}
-	
+	}	
 }

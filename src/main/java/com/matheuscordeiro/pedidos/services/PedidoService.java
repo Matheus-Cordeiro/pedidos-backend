@@ -3,12 +3,18 @@ package com.matheuscordeiro.pedidos.services;
 import java.util.Date;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.MimeMessage;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.thymeleaf.TemplateEngine;
+import org.thymeleaf.context.Context;
 
 import com.matheuscordeiro.pedidos.domain.ItemPedido;
 import com.matheuscordeiro.pedidos.domain.PagamentoBoleto;
@@ -45,6 +51,9 @@ public class PedidoService {
 	@Autowired
     private JavaMailSender javaMailSender;
 	
+	@Autowired
+	TemplateEngine templateEngine;
+	
 	private static final Logger LOG = LoggerFactory.getLogger(SmtpEmailService.class);	
 	
 	private SmtpEmailService smtpEmailService = new SmtpEmailService();
@@ -55,7 +64,7 @@ public class PedidoService {
 		"Objeto não encontrado! Id: " + id + " | Tipo: " + Pedido.class.getName()));
 	}
 	
-	public Pedido save(Pedido pedido) {
+	public Pedido save(Pedido pedido){
 		pedido.setId(null);
 		pedido.setInstante(new Date());
 		pedido.setCliente(clienteService.findById(pedido.getCliente().getId()));
@@ -78,11 +87,26 @@ public class PedidoService {
 		}
 		itemPedidoRepository.saveAll(pedido.getItens());
 		
-		LOG.info("Enviando email..");
-		SimpleMailMessage sm = smtpEmailService.prepareEmail(pedido);
-		javaMailSender.send(sm);
-		LOG.info("Email enviado");
+		LOG.info("Enviando email para " + pedido.getCliente().getEmail());
+		try {
+			MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+			MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);  
+			mimeMessageHelper.setTo(pedido.getCliente().getEmail());
+			mimeMessageHelper.setSubject("Pedido Confirmado - Código: " + pedido.getId());
+			mimeMessageHelper.setSentDate(new Date(System.currentTimeMillis()));
+			Context context = new Context();
+			context.setVariable("pedido", pedido);
+			mimeMessageHelper.setText(templateEngine.process("email/confirmacaoPedido", context), true);
+			javaMailSender.send(mimeMessage);
+			LOG.info("Email enviado");
 		
+		}catch(MessagingException e) {
+			LOG.info("Falha ao enviar email html.");
+			LOG.info("Enviando email padrão para " + pedido.getCliente().getEmail());
+			SimpleMailMessage sm = smtpEmailService.prepareEmail(pedido);	
+			javaMailSender.send(sm);
+			LOG.info("Email enviado");
+		}
 		return pedido;
 	}
 }
