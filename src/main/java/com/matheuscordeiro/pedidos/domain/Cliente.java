@@ -11,14 +11,15 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.matheuscordeiro.pedidos.domain.enums.TipoCliente;
 import com.matheuscordeiro.pedidos.domain.enums.Perfil;
+import com.matheuscordeiro.pedidos.domain.enums.TipoCliente;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -58,7 +59,7 @@ public class Cliente implements Serializable {
 	private Set<String> telefones = new HashSet<>();
 	
 	@JsonIgnore
-	@ElementCollection
+	@ElementCollection(fetch=FetchType.EAGER)
 	@CollectionTable(name = "PERFIL")
 	private Set<Integer> listaPerfil = new HashSet<>(); 
 	

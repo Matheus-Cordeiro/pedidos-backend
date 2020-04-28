@@ -59,6 +59,7 @@ public class PedidosApplication implements CommandLineRunner {
 	@Autowired
 	BCryptPasswordEncoder bCryptPasswordEncoder;
 	
+	
 	public static void main(String[] args) {
 		SpringApplication.run(PedidosApplication.class, args);
 	}
@@ -117,7 +118,7 @@ public class PedidosApplication implements CommandLineRunner {
 		estado1.getCidades().addAll(Arrays.asList(cidade1));
 		estado2.getCidades().addAll(Arrays.asList(cidade2, cidade3));
 		
-		Cliente cliente1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("qwer1234"));
+		Cliente cliente1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("123"));
 		cliente1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
 		
 		Cliente cliente2 = new Cliente(null, "admin", "matheuscordeirodev@gmail.com", "82604961008", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("qwer1234"));
