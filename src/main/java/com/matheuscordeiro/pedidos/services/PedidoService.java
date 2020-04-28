@@ -9,6 +9,9 @@ import javax.mail.internet.MimeMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -16,15 +19,18 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
+import com.matheuscordeiro.pedidos.domain.Cliente;
 import com.matheuscordeiro.pedidos.domain.ItemPedido;
 import com.matheuscordeiro.pedidos.domain.PagamentoBoleto;
 import com.matheuscordeiro.pedidos.domain.Pedido;
 import com.matheuscordeiro.pedidos.domain.Produto;
 import com.matheuscordeiro.pedidos.domain.enums.EstadoPagamento;
+import com.matheuscordeiro.pedidos.exceptions.AuthorizationException;
 import com.matheuscordeiro.pedidos.exceptions.ObjectNotFoundException;
 import com.matheuscordeiro.pedidos.repositories.ItemPedidoRepository;
 import com.matheuscordeiro.pedidos.repositories.PagamentoRepository;
 import com.matheuscordeiro.pedidos.repositories.PedidoRepository;
+import com.matheuscordeiro.pedidos.security.UserSecurity;
 
 @Service
 public class PedidoService {
@@ -108,5 +114,15 @@ public class PedidoService {
 			LOG.info("Email enviado");
 		}
 		return pedido;
+	}
+	
+	public Page<Pedido> findPage(Integer page, Integer linesPerPage,String direction, String orderBy){
+		UserSecurity userSecurity = UserService.getUsuarioLogado();
+		if(userSecurity == null) {
+			throw new AuthorizationException("Acesso negado!");
+		}
+		PageRequest pageRequest = PageRequest.of(page, linesPerPage, Direction.valueOf(direction), orderBy);
+		Cliente cliente = clienteService.findById(userSecurity.getId());
+		return pedidoRepository.findByCliente(cliente, pageRequest);
 	}
 }
