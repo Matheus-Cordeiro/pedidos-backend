@@ -29,6 +29,9 @@ public class ClienteNovoDTO implements Serializable {
 	private String email;
 	
 	@NotEmpty(message = "Preenchimento obrigatório")
+	private String senha;
+	
+	@NotEmpty(message = "Preenchimento obrigatório")
 	private String documento;
 	
 	private Integer tipoCliente;

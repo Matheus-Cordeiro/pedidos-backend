@@ -43,6 +43,9 @@ public class Cliente implements Serializable {
 	private Integer tipoCliente;
 	
 	@JsonIgnore
+	private String senha;
+	
+	@JsonIgnore
 	@OneToMany(mappedBy = "cliente")
 	private List<Pedido> pedidos = new ArrayList<>();
 	
@@ -54,13 +57,14 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
-	public Cliente(Integer id, String nome, String email, String documento, TipoCliente tipoCliente) {
+	public Cliente(Integer id, String nome, String email, String documento, TipoCliente tipoCliente, String senha) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.email = email;
 		this.documento = documento;
 		this.tipoCliente = (tipoCliente == null) ? null : tipoCliente.getCodigo();
+		this.senha = senha;
 	}
 
 	public TipoCliente getTipoCliente() {
