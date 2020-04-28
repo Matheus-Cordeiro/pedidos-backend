@@ -42,7 +42,6 @@ public class PedidoResource {
 		return ResponseEntity.ok().body(listaPedido);
 	}
 	
-	
 	@PostMapping(value = "/novo")
 	public ResponseEntity<Void> save(@Valid @RequestBody Pedido pedido){
 		pedido = service.save(pedido);
