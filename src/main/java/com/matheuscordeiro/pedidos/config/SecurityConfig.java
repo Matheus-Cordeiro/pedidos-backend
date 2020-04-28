@@ -19,6 +19,7 @@ import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.matheuscordeiro.pedidos.security.JWTAuthenticationFilter;
+import com.matheuscordeiro.pedidos.security.JWTAuthorizationFilter;
 import com.matheuscordeiro.pedidos.security.JWTUtil;
 
 @Configuration
@@ -54,15 +55,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 		
 		http.cors().and().csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
+		http.addFilter(new JWTAuthorizationFilter(authenticationManager(), jwtUtil, userDetailsService));
 
 		
 		http.authorizeRequests()
 			.antMatchers(HttpMethod.GET, PUBLIC_MATCHERS_GET).permitAll()
 			.antMatchers(PUBLIC_MATCHERS).permitAll()
 				.anyRequest().authenticated();
-		
-		http.addFilter(new JWTAuthenticationFilter(authenticationManager(), jwtUtil));
-		
 	}
 	
 	@Bean
