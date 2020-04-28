@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.CollectionTable;
@@ -17,17 +18,16 @@ import javax.persistence.OneToMany;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.matheuscordeiro.pedidos.domain.enums.TipoCliente;
+import com.matheuscordeiro.pedidos.domain.enums.Perfil;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Cliente implements Serializable {
 	private static final long serialVersionUID = 1L;
 
@@ -57,6 +57,15 @@ public class Cliente implements Serializable {
 	@CollectionTable(name = "TELEFONE")
 	private Set<String> telefones = new HashSet<>();
 	
+	@JsonIgnore
+	@ElementCollection
+	@CollectionTable(name = "PERFIL")
+	private Set<Integer> listaPerfil = new HashSet<>(); 
+	
+	public Cliente() {
+		addPerfil(Perfil.CLIENTE);
+	}
+	
 	public Cliente(Integer id, String nome, String email, String documento, TipoCliente tipoCliente, String senha) {
 		super();
 		this.id = id;
@@ -65,8 +74,17 @@ public class Cliente implements Serializable {
 		this.documento = documento;
 		this.tipoCliente = (tipoCliente == null) ? null : tipoCliente.getCodigo();
 		this.senha = senha;
+		addPerfil(Perfil.CLIENTE);
+	}
+	
+	public Set<Perfil> getPerfis() {
+		return listaPerfil.stream().map(x -> Perfil.toEnum(x)).collect(Collectors.toSet());
 	}
 
+	public void addPerfil(Perfil perfil) {
+		listaPerfil.add(perfil.getCodigo());
+	}
+	
 	public TipoCliente getTipoCliente() {
 		return TipoCliente.toEnum(tipoCliente);
 	}

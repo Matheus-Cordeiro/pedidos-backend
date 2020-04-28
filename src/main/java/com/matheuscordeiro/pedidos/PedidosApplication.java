@@ -22,6 +22,7 @@ import com.matheuscordeiro.pedidos.domain.PagamentoCartao;
 import com.matheuscordeiro.pedidos.domain.Pedido;
 import com.matheuscordeiro.pedidos.domain.Produto;
 import com.matheuscordeiro.pedidos.domain.enums.EstadoPagamento;
+import com.matheuscordeiro.pedidos.domain.enums.Perfil;
 import com.matheuscordeiro.pedidos.domain.enums.TipoCliente;
 import com.matheuscordeiro.pedidos.repositories.CategoriaRepository;
 import com.matheuscordeiro.pedidos.repositories.CidadeRepository;
@@ -116,11 +117,20 @@ public class PedidosApplication implements CommandLineRunner {
 		estado1.getCidades().addAll(Arrays.asList(cidade1));
 		estado2.getCidades().addAll(Arrays.asList(cidade2, cidade3));
 		
-		Cliente cliente1 = new Cliente(null, "Matheus Cordeiro", "matheuscordeirodev@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("qwer1234"));
+		Cliente cliente1 = new Cliente(null, "Maria Silva", "maria@gmail.com", "36378912377", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("qwer1234"));
 		cliente1.getTelefones().addAll(Arrays.asList("27363323", "93838393"));
+		
+		Cliente cliente2 = new Cliente(null, "admin", "matheuscordeirodev@gmail.com", "82604961008", TipoCliente.PESSOAFISICA, bCryptPasswordEncoder.encode("qwer1234"));
+		cliente2.addPerfil(Perfil.ADMIN);
+		cliente2.getTelefones().addAll(Arrays.asList("12345678", "900000000"));
 		
 		Endereco endereco1 = new Endereco(null, "Rua Flores", "300", "Apto 303", "Jardim", "38220834", cliente1, cidade1);
 		Endereco endereco2 = new Endereco(null, "Avenida Matos", "105", "Sala 800", "Centro", "38777012", cliente1, cidade2);
+		Endereco endereco3 = new Endereco(null, "Rua dos admin", "000", null, "Centro", "100000", cliente2, cidade2);
+		
+		cliente1.getEnderecos().addAll(Arrays.asList(endereco1, endereco2));
+		cliente2.getEnderecos().addAll(Arrays.asList(endereco1, endereco3));
+		
 		
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy hh:mm");
 		
@@ -149,8 +159,8 @@ public class PedidosApplication implements CommandLineRunner {
 		produtoRepository.saveAll(Arrays.asList(produto1, produto2, produto3, produto4, produto5, produto6, produto7, produto8, produto9, produto10, produto11));
 		estadoRepository.saveAll(Arrays.asList(estado1, estado2));
 		cidadeRepository.saveAll(Arrays.asList(cidade1, cidade2, cidade3));
-		clienteRepository.saveAll(Arrays.asList(cliente1));
-		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2));
+		clienteRepository.saveAll(Arrays.asList(cliente1, cliente2));
+		enderecoRepository.saveAll(Arrays.asList(endereco1, endereco2, endereco3));
 		pedidoRepository.saveAll(Arrays.asList(pedido1, pedido2));
 		pagamentoRepository.saveAll(Arrays.asList(pagamento1, pagamento2));
 		itemPedidoRepository.saveAll(Arrays.asList(itemPedido1, itemPedido2, itemPedido3));
